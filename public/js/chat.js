@@ -88,30 +88,49 @@ $messageForm.addEventListener('submit' , (e) => {
 })
 
 
-$sendLocationButton.addEventListener('click' , (e) => {
+// $sendLocationButton.addEventListener('click' , (e) => {
 	
-	if(!navigator.geolocation) {
-		return alert("Geolocation is not supported on this browser")
-	}
-	$sendLocationButton.setAttribute('disabled', 'disabled')
-	navigator.geolocation.getCurrentPosition((position) => {
+// 	if(!navigator.geolocation) {
+// 		return alert("Geolocation is not supported on this browser")
+// 	}
+// 	$sendLocationButton.setAttribute('disabled', 'disabled')
+// 	navigator.geolocation.getCurrentPosition((position) => {
+//         socket.emit('sendLocation', {
+//             latitude: position.coords.latitude,
+//             longitude: position.coords.longitude
+//         }, () => {
+//             console.log('Location shared!')  
+//         })
+//     })
+
+    
+// 	navigator.geolocation.getCurrentPosition((position) => {
+// 		const coords = { latitude : position.coords.latitude, longitude:position.coords.longitude }
+// 		socket.emit('sendLocation' , coords , (message) => {
+// 			$sendLocationButton.removeAttribute('disabled')
+// 			console.log(message);
+// 		})
+// 	})
+// })
+
+$sendLocationButton.addEventListener('click', () => {
+    if (!navigator.geolocation) {
+        return alert('Geolocation is not supported by your browser.')
+    }
+
+    $sendLocationButton.setAttribute('disabled', 'disabled')
+
+    navigator.geolocation.getCurrentPosition((position) => {
         socket.emit('sendLocation', {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude
         }, () => {
+            $sendLocationButton.removeAttribute('disabled')
             console.log('Location shared!')  
         })
     })
-
-    
-	navigator.geolocation.getCurrentPosition((position) => {
-		const coords = { latitude : position.coords.latitude, longitude:position.coords.longitude }
-		socket.emit('sendLocation' , coords , (message) => {
-			$sendLocationButton.removeAttribute('disabled')
-			console.log(message);
-		})
-	})
 })
+
 
 socket.emit('join' , { username , room } , (error) => {
 	if(error) {
